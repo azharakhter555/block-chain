@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title>MetaMask Login Example</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-       <!-- Google Web Fonts -->
+    <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
@@ -15,40 +15,22 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
+    <!-- Libraries Stylesheet -->
+    <link href="/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
 
-        <!-- Libraries Stylesheet -->
-        <link href="/lib/animate/animate.min.css" rel="stylesheet">
-        <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-        <link href="/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-    
-        <!-- Customized Bootstrap Stylesheet -->
-        <link href="/css/bootstrap.min.css" rel="stylesheet">
-    
-        <!-- Template Stylesheet -->
-        <link href="/css/style.css" rel="stylesheet">
-  </head>
-<body>
-    
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 
-   <!-- index.ejs -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MetaMask Login Example</title>
+    <!-- Template Stylesheet -->
+    <link href="/css/style.css" rel="stylesheet">
 </head>
 <body>
+    <!-- MetaMask Login Section -->
     <div id="metamaskMessage"></div>
     <button id="loginBtn">Login with MetaMask</button>
     <button id="logoutBtn" style="display: none;">Logout</button>
-
-
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="/js/main.js"></script>
-</body>
-</html>
-
 
     <!-- Bootstrap JS (optional) -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -73,8 +55,7 @@
                 ethereum.request({ method: 'eth_requestAccounts' })
                     .then(function(accounts) {
                         localStorage.setItem('metamaskId', accounts[0]);
-                        $("#loginBtn").hide();
-                        $("#logoutBtn").show();
+                    
                         performActions();
                     })
                     .catch(function(error) {
@@ -86,7 +67,7 @@
             function performActions() {
                 const metamaskId = localStorage.getItem('metamaskId');
                 if (metamaskId) {
-                    console.log("Logged in with MetaMask ID:", metamaskId);
+                    window.location.href = '/users';
                     // Perform actions here...
                 } else {
                     console.log("Not logged in");
@@ -107,12 +88,12 @@
             }
 
             // Handle logout button click
-            $("#logoutBtn").click(function() {
+            <!-- $("#logoutBtn").click(function() {
                 localStorage.removeItem('metamaskId');
                 $("#loginBtn").show();
                 $("#logoutBtn").hide();
                 performActions();
-            });
+            }); -->
         });
     </script>
 </body>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>User Profile</h1>
+    <div id="metamaskInfo">
+        <p><strong>Account Address:</strong> <span id="accountAddress"></span></p>
+        <p><strong>Transaction ID:</strong> <span id="transactionId"></span></p>
+    </div>
+
+    <div id="ticketSale">
+        <h2>Tickets Available: <span id="ticketCount"></span></h2>
+        <input type="number" id="ticketQuantity" min="1" placeholder="Enter quantity">
+        <button id="buyTicketsBtn">Buy Tickets</button>
+    </div>
+    <a href="/" id="logoutBtn">Logout</a>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Function to retrieve MetaMask information from local storage
+            function getMetaMaskInfo() {
+                const metamaskId = localStorage.getItem('metamaskId');
+                if (metamaskId) {
+                    $("#metamaskInfo").show();
+                    $("#accountAddress").text(metamaskId);
+
+                    // Simulate transaction ID (you would fetch this from your backend or the Ethereum network)
+                    const transactionId = "0x123abc456def";
+                    $("#transactionId").text(transactionId);
+                } else {
+                    console.log("Not logged in");
+                }
+            }
+
+            // Call the function to retrieve and display MetaMask information
+            getMetaMaskInfo();
+
+            $('#buyTicketsBtn').click(async function() {
+                const quantity = $('#ticketQuantity').val();
+                if (!quantity || quantity <= 0) {
+                    alert('Please enter a valid quantity');
+                    return;
+                }
+        
+                const contractAddress = '0xd8aa4aac1e8545896cb8833e0cf4cd9bd6240c2d';
+                const contractABI = [
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": true,
+                            "internalType": "address",
+                            "name": "owner",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": false,
+                            "internalType": "uint256",
+                            "name": "amount",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "FundsWithdrawn",
+                    "type": "event"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": true,
+                            "internalType": "address",
+                            "name": "buyer",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": false,
+                            "internalType": "uint256",
+                            "name": "ticketsBought",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "TicketPurchased",
+                    "type": "event"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "_quantity",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "buyTickets",
+                    "outputs": [],
+                    "stateMutability": "payable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "withdrawFunds",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "_ticketPrice",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "_totalTickets",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "nonpayable",
+                    "type": "constructor"
+                },
+                {
+                    "inputs": [],
+                    "name": "owner",
+                    "outputs": [
+                        {
+                            "internalType": "address payable",
+                            "name": "",
+                            "type": "address"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "ticketPrice",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "ticketsOwned",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "totalTickets",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                }
+            ]; // Add ABI of your smart contract
+        
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const contract = new web3.eth.Contract(contractABI, contractAddress);
+                    const ticketPrice = await contract.methods.ticketPrice().call();
+                    const totalPrice = ticketPrice * quantity;
+                    const receipt = await contract.methods.buyTickets(quantity).send({ from: accounts[0], value: totalPrice });
+                    console.log('Transaction receipt:', receipt);
+                    alert('Tickets purchased successfully!');
+                } catch (error) {
+                    console.error('Ticket purchase error:', error);
+                    alert('Failed to purchase tickets');
+                }
+            });
+
+            // Handle logout button click
+            $("#logoutBtn").click(function() {
+                localStorage.removeItem('metamaskId');
+            });
+        });
+    </script>
+</body>
+</html>

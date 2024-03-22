@@ -11,8 +11,6 @@ var contactRouter = require('./routes/contect');
 var nftRouter = require('./routes/nft');
 
 
-
-
 var app = express();
 
 // view engine setup
