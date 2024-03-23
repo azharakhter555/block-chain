@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/users', usersRouter);//i want to write the buy here
 app.use('/about', aboutRouter);
 app.use('/nft-products',nftRouter);
 app.use('/contact-us', contactRouter);
