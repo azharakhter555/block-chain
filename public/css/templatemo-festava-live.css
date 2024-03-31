@@ -601,6 +601,7 @@ strong {
 .artists-thumb:hover .artists-hover {
   transform: translateY(0);
   opacity: 1;
+  
 }
 
 .artists-hover {
@@ -835,6 +836,17 @@ strong {
   padding-top: 30px;
   padding-bottom: 30px;
 }
+
+.site-footer-top-1 {
+  background-color: var(--secondary-color);
+  background-image: url('../images/nainoa-shizuru-NcdG9mK3PBY-unsplash.jpg');
+  background-repeat: no-repeat;
+  margin-bottom:5px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+
 
 .site-footer-bottom {
   border-top: 1px solid #1f1c1c;

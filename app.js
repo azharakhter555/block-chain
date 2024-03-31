@@ -6,9 +6,9 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var aboutRouter = require('./routes/about');
-var contactRouter = require('./routes/contect');
-var nftRouter = require('./routes/nft');
+var buyTickets = require('./routes/butTickets');
+var eventRouter = require('./routes/event');
+
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 
@@ -40,10 +40,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);//i want to write the buy here
-app.use('/about', aboutRouter);
-app.use('/nft-products',nftRouter);
-app.use('/contact-us', contactRouter);
+app.use('/event', eventRouter);//i want to write the buy here
+app.use('/buy-tickets', buyTickets);
+// app.use('/login', aboutRouter);
+
+
 
 app.use('/', ganacheProxy);
 
