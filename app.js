@@ -9,9 +9,25 @@ var usersRouter = require('./routes/users');
 var aboutRouter = require('./routes/about');
 var contactRouter = require('./routes/contect');
 var nftRouter = require('./routes/nft');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 
 var app = express();
+
+// Define CORS headers middleware
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
+// Create a proxy middleware for Ganache
+const ganacheProxy = createProxyMiddleware({
+  target: 'http://127.0.0.1:8545', // Your Ganache endpoint
+  changeOrigin: true,
+  ws: true
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,6 +44,9 @@ app.use('/users', usersRouter);//i want to write the buy here
 app.use('/about', aboutRouter);
 app.use('/nft-products',nftRouter);
 app.use('/contact-us', contactRouter);
+
+app.use('/', ganacheProxy);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

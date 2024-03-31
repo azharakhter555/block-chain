@@ -170,6 +170,7 @@
             const accounts = await web3.eth.getAccounts();
             const account = accounts[0];
             const quantityToBuy = document.getElementById('quantity').value;
+            alert("buying tickets from metamask")
         
             try {
                 await contract.methods.buyTickets(quantityToBuy).send({ from: account, value: quantityToBuy });
