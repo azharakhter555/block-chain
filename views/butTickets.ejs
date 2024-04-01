@@ -11,15 +11,10 @@
 
     <!-- CSS FILES -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;400;700&display=swap" rel="stylesheet">
-
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
     <link href="css/bootstrap-icons.css" rel="stylesheet">
-
     <link href="css/templatemo-festava-live.css" rel="stylesheet">
    
 </head>
@@ -36,7 +31,7 @@
                         <!-- Tabs -->
                         <ul class="nav nav-tabs site-footer-top-1" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class=" btn custom-btn nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true">Login with MetaMask</button>
+                                <button class=" btn custom-btn nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true">Buy Ticket with metamask</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class=" btn custom-btn nav-link" id="ticket-forms-tab" data-bs-toggle="tab" data-bs-target="#ticket-forms" type="button" role="tab" aria-controls="ticket-forms" aria-selected="false">Ticket Forms</button>
@@ -54,24 +49,45 @@
                             <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
                                 <div class="container">
                                     <div class="row justify-content-center">
-                                        <div class="col-lg-12 text-center">
-                                            <!-- Display MetaMask information -->
+                                        <div class="col-lg-6 text-center">
+
+
                                             <h3>MetaMask Information</h3>
                                             <p id="metamask-status">Loading MetaMask status...</p>
                                             <p id="metamask-account">Account: </p>
                                             <p id="metamask-network">Network: </p>
                                             <p id="metamask-balances">Balances: </p>
-                            
+                                            <p id="metamask-error-message"></p>
+                                            
                                             <!-- MetaMask login button -->
-                                            <button id="login-with-metamask-btn" class="btn custom-btn">Login with MetaMask</button>
+                                            <button id="login-with-metamask-btn"  onclick="connectMetamask()" class="btn custom-btn">Login with MetaMask</button>
                                         </div>
+
+                                        <div class="col-lg-6 text-center">
+                                            <div id="blocks-number"></div>
+                                            <div id="block-size"></div>
+                                            <div id="block-time"></div>
+                                            <div id="sepolia-rate-btc"></div>
+                                            <div id="sepolia-rate-usd"></div>
+                                            <div id="sepolia-rate-cap-usd"></div>
+                                           
+                                            <!-- Display MetaMask information -->
+                                            <h3>To buy upcoming event</h3>
+                                            <p id="a">Event Name</p>
+                                            <p id="c">Start Date </p>
+                                            <p id="f">Timing</p>
+                                            <p id="ws">Locations</p>
+                                            <p>Payment with MetaMask or Stripe</p>
+                                            <p>Google Map</p>
+                                        </div>
+                                       
+
                                     </div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="ticket-forms" role="tabpanel" aria-labelledby="ticket-forms-tab">
                                 <div class="container">
                                     <div class="row">
-                    
                                         <div class="col-lg-12 col-10 mx-auto">
                                             <form class="custom-form ticket-form mb-5 mb-lg-0" action="#" method="post" role="form">
                                                 <h2 class="text-center mb-4">Get started here</h2>
@@ -82,30 +98,25 @@
                                                             <input type="text" name="ticket-form-name" id="ticket-form-name"
                                                                 class="form-control" placeholder="Full name" required>
                                                         </div>
-                    
                                                         <div class="col-lg-6 col-md-6 col-12">
                                                             <input type="email" name="ticket-form-email" id="ticket-form-email"
                                                                 pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email address"
                                                                 required>
                                                         </div>
                                                     </div>
-                    
                                                     <input type="tel" class="form-control" name="ticket-form-phone"
                                                         placeholder="Ph 085-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required="">
-                    
                                                     <h6>Choose Ticket Type</h6>
-                    
                                                     <div class="row">
                                                         <div class="col-lg-6 col-md-6 col-12">
                                                             <div class="form-check form-control">
                                                                 <input class="form-check-input" type="radio" name="TicketForm"
                                                                     id="flexRadioDefault1">
                                                                 <label class="form-check-label" for="flexRadioDefault1">
-                                                                    Eary bird $120
+                                                                    Early bird $120
                                                                 </label>
                                                             </div>
                                                         </div>
-                    
                                                         <div class="col-lg-6 col-md-6 col-12">
                                                             <div class="form-check form-check-radio form-control">
                                                                 <input class="form-check-input" type="radio" name="TicketForm"
@@ -116,13 +127,10 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                    
                                                     <input type="number" name="ticket-form-number" id="ticket-form-number"
                                                         class="form-control" placeholder="Number of Tickets" required>
-                    
                                                     <textarea name="ticket-form-message" rows="3" class="form-control"
                                                         id="ticket-form-message" placeholder="Additional Request"></textarea>
-                    
                                                     <div class="col-lg-4 col-md-10 col-8 mx-auto">
                                                         <button type="submit" class="form-control">Buy Ticket</button>
                                                     </div>
@@ -130,6 +138,7 @@
                                             </form>
                                         </div>
                                     </div>
+                                </div>
                             </div>
                             <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
                                 <!-- Payment options content goes here -->
@@ -137,7 +146,6 @@
                             <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
                                 <!-- Payment options content goes here -->
                             </div>
-                            
                         </div>
                     </div>
                 </div>
@@ -152,8 +160,51 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.sticky.js"></script>
-    <script src="js/click-scroll.js"></script>
+    <!-- <script src="js/click-scroll.js"></script> -->
     <script src="js/custom.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
+    <script type="text/javascript">
+        let account;
+        const connectMetamask = async () => {
+            if (typeof window.ethereum === 'undefined') {
+                document.getElementById("metamask-error-message").innerHTML = 'MetaMask extension is not installed or not available. Please Installed the MetaMask extension on the browser';
+                return;
+            }
     
+            try {
+                const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+                account = accounts[0];
+                document.getElementById("metamask-status").innerHTML = `User Account: ${account}`;
+            } catch (error) {
+                console.error(error);
+                document.getElementById("metamask-error-message").innerHTML = 'Error connecting to MetaMask. Please try again later.';
+            }
+        }
+    </script>
+
+    <script>
+        // Function to fetch Sepolia token rate from Blockchair API and update HTML
+        async function fetchSepoliaRate() {
+            try {
+                const response = await fetch('https://api.blockchair.com/ethereum/stats');
+                const data = await response.json();
+                document.getElementById("blocks-number").innerHTML = `Sepolia Block Numbers: ${data?.data?.market_price_btc}`;
+                document.getElementById("block-size").innerHTML = `Sepolia Block Size: ${data?.data?.market_price_btc}`;
+                document.getElementById("block-time").innerHTML = `Sepolia Block Time: ${data?.data?.market_price_btc}`;
+                
+                document.getElementById("sepolia-rate-btc").innerHTML = `Sepolia Token Rate: ${data?.data?.market_price_btc} BTC`;
+                document.getElementById("sepolia-rate-usd").innerHTML = `Sepolia Token Rate: ${data?.data?.market_price_usd} USD`;
+                document.getElementById("sepolia-rate-cap-usd").innerHTML = `Sepolia Token Rate: ${data?.data?.market_cap_usd} cap_USD`;
+                           
+               
+
+            } catch (error) {
+                console.error('Error fetching Sepolia token rate:', error);
+            }
+        }
+
+        // Call the function when the page loads
+  
+    </script>
 </body>
 </html>

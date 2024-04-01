@@ -46,7 +46,7 @@ app.use('/buy-tickets', buyTickets);
 
 
 
-app.use('/', ganacheProxy);
+// app.use('/', ganacheProxy);
 
 
 // catch 404 and forward to error handler
