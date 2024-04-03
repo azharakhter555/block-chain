@@ -54,14 +54,29 @@
 
                                             <h3>MetaMask Information</h3>
                                             <p id="metamask-status">Loading MetaMask status...</p>
-                                            <p id="metamask-account">Account: </p>
-                                            <p id="metamask-network">Network: </p>
-                                            <p id="metamask-balances">Balances: </p>
                                             <p id="metamask-error-message"></p>
                                             
                                             <!-- MetaMask login button -->
                                             <button id="login-with-metamask-btn"  onclick="connectMetamask()" class="btn custom-btn">Login with MetaMask</button>
                                         </div>
+
+                                        <div id="contractArea"></div>
+
+                                        <div id="balance-info"></div>
+                                        <div>
+                            
+                                        </div>
+                                        <div>ticket transfer</div>
+                                        <div>getTicket infor</div>
+                                        <div>withdrwa</div>
+
+                                        <button onclick="getContractAccount()"> GET CONTRACT ACCOUNT </button>
+                                        <div>
+                                            <button onclick="depositContract()">Send ether to the Contract</button><br>
+                                            <input type="number" id="depositInput" placeholder="Enter Amount"><br> <br>
+                                        </div>
+
+
 
                                         <div class="col-lg-6 text-center">
                                             <div id="blocks-number"></div>
@@ -163,48 +178,251 @@
     <!-- <script src="js/click-scroll.js"></script> -->
     <script src="js/custom.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
-    <script type="text/javascript">
+    <script>
         let account;
+        let contract;
+        let web3;
+
+        const connectContract = async () => {
+          const ABI=[
+          {
+              "anonymous": false,
+              "inputs": [
+                  {
+                      "indexed": true,
+                      "internalType": "address",
+                      "name": "user",
+                      "type": "address"
+                  },
+                  {
+                      "indexed": true,
+                      "internalType": "address",
+                      "name": "to",
+                      "type": "address"
+                  },
+                  {
+                      "indexed": false,
+                      "internalType": "uint256",
+                      "name": "numberOfTickets",
+                      "type": "uint256"
+                  },
+                  {
+                      "indexed": false,
+                      "internalType": "bool",
+                      "name": "isPurchase",
+                      "type": "bool"
+                  }
+              ],
+              "name": "TicketAction",
+              "type": "event"
+          },
+          {
+              "anonymous": false,
+              "inputs": [
+                  {
+                      "indexed": true,
+                      "internalType": "address",
+                      "name": "from",
+                      "type": "address"
+                  },
+                  {
+                      "indexed": true,
+                      "internalType": "address",
+                      "name": "to",
+                      "type": "address"
+                  },
+                  {
+                      "indexed": false,
+                      "internalType": "uint256",
+                      "name": "numberOfTickets",
+                      "type": "uint256"
+                  }
+              ],
+              "name": "TicketsTransferred",
+              "type": "event"
+          },
+          {
+              "inputs": [
+                  {
+                      "internalType": "uint256",
+                      "name": "numberOfTickets",
+                      "type": "uint256"
+                  }
+              ],
+              "name": "buyTickets",
+              "outputs": [],
+              "stateMutability": "payable",
+              "type": "function"
+          },
+          {
+              "inputs": [],
+              "name": "deposit",
+              "outputs": [],
+              "stateMutability": "payable",
+              "type": "function"
+          },
+          {
+              "inputs": [],
+              "name": "getContractAddress",
+              "outputs": [
+                  {
+                      "internalType": "address",
+                      "name": "",
+                      "type": "address"
+                  }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+          },
+          {
+              "inputs": [],
+              "name": "getContractBalance",
+              "outputs": [
+                  {
+                      "internalType": "uint256",
+                      "name": "",
+                      "type": "uint256"
+                  }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+          },
+          {
+              "inputs": [
+                  {
+                      "internalType": "address",
+                      "name": "userAddress",
+                      "type": "address"
+                  }
+              ],
+              "name": "getTicketInfo",
+              "outputs": [
+                  {
+                      "internalType": "address",
+                      "name": "",
+                      "type": "address"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "",
+                      "type": "uint256"
+                  }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+          },
+          {
+              "inputs": [],
+              "name": "ticketPrice",
+              "outputs": [
+                  {
+                      "internalType": "uint256",
+                      "name": "",
+                      "type": "uint256"
+                  }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+          },
+          {
+              "inputs": [
+                  {
+                      "internalType": "address",
+                      "name": "",
+                      "type": "address"
+                  }
+              ],
+              "name": "ticketsOwned",
+              "outputs": [
+                  {
+                      "internalType": "uint256",
+                      "name": "",
+                      "type": "uint256"
+                  }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+          },
+          {
+              "inputs": [
+                  {
+                      "internalType": "address",
+                      "name": "to",
+                      "type": "address"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "numberOfTickets",
+                      "type": "uint256"
+                  }
+              ],
+              "name": "transferTickets",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+          },
+          {
+              "inputs": [
+                  {
+                      "internalType": "address payable",
+                      "name": "_to",
+                      "type": "address"
+                  },
+                  {
+                      "internalType": "uint256",
+                      "name": "_amount",
+                      "type": "uint256"
+                  }
+              ],
+              "name": "withdraw",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+          },
+          {
+              "inputs": [],
+              "name": "withdrawTickets",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+          }
+      ];  
+        const Address = "0x0F216b8ef81D418828D835197Fe187b4Bb2F412d"; // Taking Address from Remix 
+          
+            window.web3 = await new Web3(window.ethereum);
+            window.contract = await new window.web3.eth.Contract(ABI, Address);
+            const data = await window.contract.methods.getContractAddress().call();
+            document.getElementById("contractArea").innerHTML = "Connected to Contract";
+         
+        }
+        const getContractAccount = async () => {
+            const data = await window.contract.methods.getContractAddress().call();
+            document.getElementById("contractAccount").innerHTML = `Contract Account: ${data}`;
+        }
+
+
+        // Function to connect to MetaMask
         const connectMetamask = async () => {
-            if (typeof window.ethereum === 'undefined') {
-                document.getElementById("metamask-error-message").innerHTML = 'MetaMask extension is not installed or not available. Please Installed the MetaMask extension on the browser';
-                return;
-            }
-    
             try {
-                const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-                account = accounts[0];
-                document.getElementById("metamask-status").innerHTML = `User Account: ${account}`;
+                // Connect to MetaMask
+                if (window.ethereum) {
+                    web3 = new Web3(window.ethereum);
+                    await window.ethereum.enable();
+                    const accounts = await web3.eth.getAccounts();
+                    account = accounts[0];
+                    document.getElementById("metamask-status").innerHTML = `User Account: ${account}`;
+                    connectContract()                   
+
+                } else {
+                    throw new Error('MetaMask extension not installed or not available.');
+                }
             } catch (error) {
                 console.error(error);
                 document.getElementById("metamask-error-message").innerHTML = 'Error connecting to MetaMask. Please try again later.';
             }
         }
-    </script>
-
-    <script>
-        // Function to fetch Sepolia token rate from Blockchair API and update HTML
-        async function fetchSepoliaRate() {
-            try {
-                const response = await fetch('https://api.blockchair.com/ethereum/stats');
-                const data = await response.json();
-                document.getElementById("blocks-number").innerHTML = `Sepolia Block Numbers: ${data?.data?.market_price_btc}`;
-                document.getElementById("block-size").innerHTML = `Sepolia Block Size: ${data?.data?.market_price_btc}`;
-                document.getElementById("block-time").innerHTML = `Sepolia Block Time: ${data?.data?.market_price_btc}`;
-                
-                document.getElementById("sepolia-rate-btc").innerHTML = `Sepolia Token Rate: ${data?.data?.market_price_btc} BTC`;
-                document.getElementById("sepolia-rate-usd").innerHTML = `Sepolia Token Rate: ${data?.data?.market_price_usd} USD`;
-                document.getElementById("sepolia-rate-cap-usd").innerHTML = `Sepolia Token Rate: ${data?.data?.market_cap_usd} cap_USD`;
-                           
-               
-
-            } catch (error) {
-                console.error('Error fetching Sepolia token rate:', error);
-            }
-        }
-
-        // Call the function when the page loads
-  
+    
+       
     </script>
 </body>
 </html>
